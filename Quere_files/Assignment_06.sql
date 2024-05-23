@@ -30,12 +30,11 @@ INNER JOIN department d ON ri.dept_id = d.dept_id
 WHERE ri.rnk <= 2;
 
 --5. Select a random student from each department (using SAMPLE):
-SELECT St_Id,St_Fname,Dept_Id
-FROM (
-  SELECT *, ROW_NUMBER() OVER (PARTITION BY Dept_Id ORDER BY RAND()) AS r
-  FROM Student
-) AS rs
-WHERE r = 1 and Dept_Id is not NULL;
+SELECT Dept_Name , St_Id , CONCAT (St_Fname,' ',ST_Lname) AS FullName
+FROM (SELECT D.Dept_Name , S.St_Id , S.St_Fname ,ST_Lname, RANK() OVER(PARTITION BY D.DEPT_ID ORDER BY NEWID()) AS RAND
+FROM STUDENT S JOIN Department D ON S.Dept_Id = D.Dept_Id 
+) AS NEWTABLE
+WHERE RAND <= 1
 
 
 --================================================================================--
